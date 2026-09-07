@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-root=".." data-page="museums">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Museum and gallery directory | WRTE</title>
+    <meta name="description" content="Mapped museums and art galleries in Asia-Pacific, Europe, the UK, the US, and Australia." />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#ffcc00" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' https:; font-src 'self'; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()" />
+    <link rel="canonical" href="https://ezhu331.github.io/wrte-guides/museums/" />
+    <link rel="icon" href="../assets/wrte-mark-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="../assets/wrte-mark.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="WRTE" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Museum and gallery directory | WRTE" />
+    <meta property="og:description" content="Mapped museums and art galleries in Asia-Pacific, Europe, the UK, the US, and Australia." />
+    <meta property="og:url" content="https://ezhu331.github.io/wrte-guides/museums/" />
+    <meta property="og:image" content="https://ezhu331.github.io/wrte-guides/assets/landing/museum-gallery-mania.jpg" />
+    <meta property="og:image:alt" content="Museum hall" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Museum and gallery directory | WRTE" />
+    <meta name="twitter:description" content="Mapped museums and art galleries in Asia-Pacific, Europe, the UK, the US, and Australia." />
+    <meta name="twitter:image" content="https://ezhu331.github.io/wrte-guides/assets/landing/museum-gallery-mania.jpg" />
+    <link rel="stylesheet" href="../assets/site.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <nav class="mast">
+        <a class="brand" href="../"><img src="../assets/wrte-mark-32.png" alt="" width="32" height="32" />WRTE</a>
+        <p class="issue">09 / 26</p>
+        <div class="nav-links">
+          <a href="../seichi/" class="" data-en="Seichi" data-ja="聖地">Seichi</a>
+          <a href="../seichi/train/" class="" data-en="Trains" data-ja="鉄道">Trains</a>
+          <a href="../museums/" class="is-current" data-en="Museums" data-ja="美術館">Museums</a>
+          <a href="../support/" class="" data-en="Issues" data-ja="報告">Issues</a>
+          <a href="https://apps.apple.com/app/id6785785728">App Store</a>
+        </div>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" class="lang__btn is-current" data-set-lang="en">EN</button>
+          <button type="button" class="lang__btn" data-set-lang="ja">日本語</button>
+        </div>
+      </nav>
+      
+      <p class="kicker"><a href="../" data-en="Guides" data-ja="案内">Guides</a> · <span data-en="Museum mania" data-ja="美術館">Museum mania</span></p>
+      <h1 class="display display--page" data-en="Museums and galleries" data-ja="美術館とギャラリー">Museums and galleries</h1>
+      <p class="lede" data-en="Search a name, then pick a region and city." data-ja="館名で検索してから地域と都市を選べます。">Search a name, then pick a region and city.</p>
+      <div class="filters">
+      <div class="toolbar">
+        <label class="search museum-dir__search">
+          <span class="visually-hidden" data-en="Search museums" data-ja="館名で検索">Search museums</span>
+          <input id="search" type="search" placeholder="Museum or gallery name" data-ph-en="Museum or gallery name" data-ph-ja="館名で検索" />
+        </label>
+        <p class="count museum-dir__count" id="count" role="status"></p>
+      </div>
+      <div class="museum-dir__regions" id="regions" role="tablist" aria-label="Region"></div>
+      <div class="rail museum-dir__cities" id="city" role="list" aria-label="City"></div>
+      <div class="museum-dir__kinds" id="kinds" role="tablist" aria-label="Venue type">
+        <button type="button" class="museum-dir__kind museum-dir__kind--active" data-kind="all" data-en="All" data-ja="すべて">All</button>
+        <button type="button" class="museum-dir__kind" data-kind="museum" data-en="Museums" data-ja="美術館">Museums</button>
+        <button type="button" class="museum-dir__kind" data-kind="gallery" data-en="Galleries" data-ja="ギャラリー">Galleries</button>
+      </div>
+      </div>
+      <div id="results"></div>
+      <nav class="pager museum-dir__pager" id="pager" aria-label="Results pages"></nav>
+      <p class="attrib">Identifiers sourced from Wikidata.</p>
+
+      <footer class="site-foot"><span>WRTE</span><span data-en="Independent listings" data-ja="独立した掲載">Independent listings</span></footer>
+    </main>
+    <script src="../assets/directory.js?v=9" defer></script>
+  </body>
+</html>

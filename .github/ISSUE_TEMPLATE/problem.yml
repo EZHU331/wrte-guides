@@ -1,0 +1,22 @@
+name: Problem
+description: Report a problem with the app or these guides
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - iOS app
+        - Manga guide
+        - Filming guide
+        - Train guide
+        - Museums
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What happened
+    validations:
+      required: true

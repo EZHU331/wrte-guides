@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ezhu331.github.io/wrte-guides/sitemap.xml
