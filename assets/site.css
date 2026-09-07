@@ -174,6 +174,8 @@ html[lang="ja"] .display { text-transform: none; letter-spacing: -0.02em; }
 .japan-map__stage {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
+  contain: paint;
   min-height: 22rem;
   border-radius: 2rem;
   background: linear-gradient(160deg, #2a1c14 0%, #14110f 58%, #3a2416 100%);
@@ -196,11 +198,29 @@ html[lang="ja"] .display { text-transform: none; letter-spacing: -0.02em; }
   font-weight: 800;
   font-family: var(--sans);
 }
+.japan-map__pin .japan-map__stem,
+.japan-map__pin .japan-map__pill,
+.japan-map__pin .japan-map__text {
+  opacity: 0;
+  pointer-events: none;
+}
+.japan-map__pin.has-label .japan-map__stem,
+.japan-map__pin.has-label .japan-map__pill,
+.japan-map__pin.has-label .japan-map__text,
+.japan-map__pin.is-hot .japan-map__stem,
+.japan-map__pin.is-hot .japan-map__pill,
+.japan-map__pin.is-hot .japan-map__text,
+.japan-map__pin.is-on .japan-map__stem,
+.japan-map__pin.is-on .japan-map__pill,
+.japan-map__pin.is-on .japan-map__text {
+  opacity: 1;
+}
 .japan-map__pin.is-on .japan-map__anchor {
   r: 5;
   filter: drop-shadow(0 0 10px #ffcc00);
 }
-.japan-map__pin.is-on .japan-map__pill {
+.japan-map__pin.is-on .japan-map__pill,
+.japan-map__pin.is-hot .japan-map__pill {
   filter: drop-shadow(0 0 12px rgba(255, 204, 0, 0.85));
 }
 .japan-map__card {

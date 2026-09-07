@@ -238,20 +238,20 @@ const LAND_RINGS = [
   [[127.6, 26.1], [128.3, 26.2], [128.3, 26.7], [127.7, 26.7]],
 ];
 const MAP_PAD = { x: 64, y: 52 };
-const MAP_LABELS = new Set(['sapporo', 'sendai', 'tokyo', 'osaka', 'fukuoka', 'naha', 'kanazawa']);
+const MAP_LABELS = new Set(['sapporo', 'sendai', 'tokyo', 'osaka', 'fukuoka', 'naha']);
 const LABEL_PREFER = {
-  sapporo: [[36, 8]],
-  sendai: [[36, -8]],
-  kanazawa: [[-48, -16]],
-  tokyo: [[48, 4]],
-  yokohama: [[46, 22]],
-  nagoya: [[36, 30]],
-  kyoto: [[-50, -6]],
-  osaka: [[4, 52]],
-  kobe: [[-48, 28]],
-  hiroshima: [[-40, 44]],
-  fukuoka: [[-70, 4]],
-  naha: [[14, 26]],
+  sapporo: [28, 8],
+  sendai: [36, -8],
+  tokyo: [34, 4],
+  yokohama: [46, 22],
+  nagoya: [-56, 28],
+  kyoto: [-50, -6],
+  osaka: [22, 26],
+  kobe: [-48, 28],
+  hiroshima: [-52, 36],
+  fukuoka: [-38, 16],
+  naha: [0, 22],
+  kanazawa: [-54, -22],
 };
 
 function project(lat, lng) {
@@ -279,8 +279,12 @@ function svgEl(name, attrs) {
   return node;
 }
 
-function boxesOverlap(a, b, gap = 16) {
+function boxesOverlap(a, b, gap = 8) {
   return a.x < b.x + b.w + gap && a.x + a.w + gap > b.x && a.y < b.y + b.h + gap && a.y + a.h + gap > b.y;
+}
+
+function labelWidth(label) {
+  return Math.max(42, Math.round(label.length * 5.35 + 16));
 }
 
 function labelBox(p, slot, width) {
@@ -292,24 +296,20 @@ function labelBox(p, slot, width) {
   };
 }
 
-function candidateSlots(id) {
-  const out = [...(LABEL_PREFER[id] || [])];
-  for (const radius of [22, 34, 46, 60, 76]) {
-    for (let angle = 0; angle < 360; angle += 24) {
+function pickLabelSlot(p, width, taken, preferred) {
+  const first = preferred || [0, -16];
+  const candidates = [first];
+  for (const radius of [28, 40, 54, 70, 88, 108, 128, 150, 172]) {
+    for (let angle = -90; angle < 270; angle += 18) {
       const rad = (angle * Math.PI) / 180;
-      out.push([Math.round(Math.cos(rad) * radius), Math.round(Math.sin(rad) * radius)]);
+      candidates.push([Math.round(Math.cos(rad) * radius), Math.round(Math.sin(rad) * radius)]);
     }
   }
-  return out;
-}
-
-function pickLabelSlot(p, width, taken, id) {
-  for (const slot of candidateSlots(id)) {
+  for (const slot of candidates) {
     const box = labelBox(p, slot, width);
     if (!taken.some((other) => boxesOverlap(other, box))) return { slot, box };
   }
-  const slot = (LABEL_PREFER[id] && LABEL_PREFER[id][0]) || [0, -20];
-  return { slot, box: labelBox(p, slot, width) };
+  return { slot: first, box: labelBox(p, first, width) };
 }
 
 function paintJapanMap(root, cities, selectedId, onPick) {
@@ -342,8 +342,8 @@ function paintJapanMap(root, cities, selectedId, onPick) {
     if (slots.has(city.id)) return;
     const p = project(city.lat, city.lng);
     const label = cityLabel(city);
-    const width = Math.max(56, label.length * 9.2 + 26);
-    const picked = pickLabelSlot(p, width, placed, city.id);
+    const width = labelWidth(label);
+    const picked = pickLabelSlot(p, width, placed, LABEL_PREFER[city.id]);
     placed.push(picked.box);
     slots.set(city.id, { ...picked, label, width, p });
   }
@@ -359,32 +359,33 @@ function paintJapanMap(root, cities, selectedId, onPick) {
       'data-city-id': city.id,
     });
     g.appendChild(svgEl('circle', { class: 'japan-map__anchor', r: city.id === selectedId ? 5 : 3.2 }));
-    if (showLabel) {
-      const { slot, label, width } = slots.get(city.id);
-      g.appendChild(svgEl('line', {
-        class: 'japan-map__stem',
-        x1: 0,
-        y1: 0,
-        x2: slot[0].toFixed(1),
-        y2: (slot[1] - 2).toFixed(1),
-      }));
-      g.appendChild(svgEl('rect', {
-        class: 'japan-map__pill',
-        x: (slot[0] - width / 2).toFixed(1),
-        y: (slot[1] - 18).toFixed(1),
-        width: width.toFixed(1),
-        height: 18,
-        rx: 9,
-      }));
-      const text = svgEl('text', {
-        class: 'japan-map__text',
-        x: slot[0].toFixed(1),
-        y: (slot[1] - 5).toFixed(1),
-        'text-anchor': 'middle',
-      });
-      text.textContent = label;
-      g.appendChild(text);
-    }
+    const label = cityLabel(city);
+    const placedSlot = slots.get(city.id);
+    const slot = (placedSlot && placedSlot.slot) || LABEL_PREFER[city.id] || [0, -16];
+    const width = (placedSlot && placedSlot.width) || labelWidth(label);
+    g.appendChild(svgEl('line', {
+      class: 'japan-map__stem',
+      x1: 0,
+      y1: 0,
+      x2: slot[0].toFixed(1),
+      y2: (slot[1] - 2).toFixed(1),
+    }));
+    g.appendChild(svgEl('rect', {
+      class: 'japan-map__pill',
+      x: (slot[0] - width / 2).toFixed(1),
+      y: (slot[1] - 18).toFixed(1),
+      width: width.toFixed(1),
+      height: 18,
+      rx: 9,
+    }));
+    const text = svgEl('text', {
+      class: 'japan-map__text',
+      x: slot[0].toFixed(1),
+      y: (slot[1] - 5).toFixed(1),
+      'text-anchor': 'middle',
+    });
+    text.textContent = label;
+    g.appendChild(text);
     g.addEventListener('pointerenter', () => g.classList.add('is-hot'));
     g.addEventListener('pointerleave', () => g.classList.remove('is-hot'));
     g.addEventListener('click', () => onPick(city.id));
